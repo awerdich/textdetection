@@ -1,0 +1,29 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+tox = "*"
+cython = "*"
+pyscaffold = "*"
+pyarrow = "*"
+fastparquet = "*"
+scikit-learn = "*"
+opencv-python = "*"
+tqdm = "*"
+lightning = "*"
+albumentations = "*"
+python-dotenv = "*"
+textdetection = {file = ".", editable = true}
+imutils = "*"
+
+[dev-packages]
+jupyterlab = "*"
+ipywidgets = "*"
+matplotlib = "*"
+seaborn = "*"
+
+[requires]
+python_version = "3.11"
+python_full_version = "3.11.8"
