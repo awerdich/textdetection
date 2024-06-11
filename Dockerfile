@@ -1,6 +1,7 @@
 FROM nvidia/cuda:12.1.1-base-ubuntu22.04 AS base
 
 ARG DEV_textdetection
+ARG DEBIAN_FRONTEND=noninteractive
 
 ENV \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -13,7 +14,8 @@ ENV \
     PIP_SRC=/src \
     PIPENV_HIDE_EMOJIS=true \
     NO_COLOR=true \
-    PIPENV_NOSPIN=true
+    PIPENV_NOSPIN=true \
+    TZ=America/New_York
 
 # Port for JupyterLab server
 EXPOSE 8888
@@ -24,8 +26,6 @@ WORKDIR /app
 # System dependencies
 RUN apt-get update -y && \
     apt-get install -y \
-    'python3.10' \
-    'python3-pip' \
     'git' \
     'libgl1-mesa-glx' \
     'ffmpeg' \
@@ -33,8 +33,24 @@ RUN apt-get update -y && \
     'libxext6' \
     'ninja-build'
 
+# Install python 3.11 from the deadsnakes repository
+RUN : \
+    && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \ 
+    && echo $TZ > /etc/timezone \
+    && apt-get install -y software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get update -y \
+    && apt-get install -y --no-install-recommends \
+        'python3.11-venv' \ 
+        'python3-pip' \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && :
+RUN python3.11 -m venv /venv
+ENV PATH=/venv/bin:$PATH
+
 # Create a symbolic link for python
-RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN ln -s /usr/bin/python3.11 /usr/bin/python
 
 # Pip and pipenv
 RUN pip install --upgrade pip
@@ -54,7 +70,7 @@ RUN --mount=source=.git,target=.git,type=bind \
 
 # Install dependencies from setup.cfg (ignored py pipenv system installs) 
 RUN python -m pip install setuptools setuptools-scm torch torchvision torchaudio
-RUN python -m pip install 'git+https://github.com/facebookresearch/detectron2.git'
+# RUN python -m pip install 'git+https://github.com/facebookresearch/detectron2.git'
 
 # Run the jupyter lab server
 CMD ["/bin/bash", "/app/bash_scripts/docker_entry.sh"]
