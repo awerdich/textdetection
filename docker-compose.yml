@@ -13,7 +13,7 @@ services:
     env_file:
       - ./.env_vm
     ports:
-      - "8888:8888"
+      - "7485:7485"
     volumes:
       - .:/app
       - /home/andreas/data:/app/data
