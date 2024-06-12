@@ -18,14 +18,15 @@ ENV \
     TZ=America/New_York
 
 # Port for JupyterLab server
-EXPOSE 8888
+EXPOSE 7485
 
 RUN mkdir -p /app
 WORKDIR /app
 
 # System dependencies
-RUN apt-get update -y && \
-    apt-get install -y \
+RUN : \
+    && apt-get update -y \
+    && apt-get install -y \
     'git' \
     'libgl1-mesa-glx' \
     'ffmpeg' \
