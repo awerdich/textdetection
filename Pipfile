@@ -15,8 +15,12 @@ tqdm = "*"
 lightning = "*"
 albumentations = "*"
 python-dotenv = "*"
-textdetection = {file = ".", editable = true}
 imutils = "*"
+pydicom = "*"
+openpyxl = "*"
+textdetection = {file = ".", editable = true}
+python-gdcm = "*"
+pylibjpeg = "*"
 
 [dev-packages]
 jupyterlab = "*"
